@@ -1,6 +1,6 @@
 const Highlight = require("../models/Highlight");
 
-// CREATE or UPDATE (Admin)
+// ================= CREATE OR UPDATE (ADMIN) =================
 exports.upsertHighlights = async (req, res) => {
   try {
     const data = req.body;
@@ -25,15 +25,22 @@ exports.upsertHighlights = async (req, res) => {
     console.error("Highlight update error:", error);
     res.status(500).json({
       success: false,
-      error: error.message,
+      error: "Failed to save highlights",
     });
   }
 };
 
-// GET HIGHLIGHTS (Public)
+// ================= GET HIGHLIGHTS (PUBLIC) =================
 exports.getHighlights = async (req, res) => {
   try {
     const highlight = await Highlight.findOne().sort({ createdAt: -1 });
+
+    if (!highlight) {
+      return res.status(200).json({
+        success: true,
+        highlight: null,
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -43,7 +50,7 @@ exports.getHighlights = async (req, res) => {
     console.error("Fetch highlights error:", error);
     res.status(500).json({
       success: false,
-      error: error.message,
+      error: "Failed to fetch highlights",
     });
   }
 };

@@ -2,43 +2,75 @@ const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema(
   {
-    companyName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
-    logoUrl: {
-      type: String,
-    },
-    arrivalDate: {
-      type: Date,
-      required: true,
-    },
-    cgpaRequired: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 10,
-    },
-    role: {
+
+    logo: {
       type: String,
       required: true,
     },
-    openings: {
+
+    package: {
+      type: String, // e.g. "3.5 LPA"
+      required: true,
+    },
+
+    visitDate: {
+      type: String, // e.g. "20 Feb 2026"
+      required: true,
+    },
+
+    lastDateToApply: {
+      type: String, // e.g. "18 Feb 2026"
+      required: true,
+    },
+
+    posts: {
       type: Number,
       required: true,
       min: 1,
     },
+
+    role: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    jobType: {
+      type: String,
+      required: true,
+      enum: ["Full-time", "Internship", "Part-time", "Contract"],
+    },
+
     location: {
       type: String,
       required: true,
+      trim: true,
     },
-    jdUrl: {
+
+    eligibility: {
       type: String,
+      required: true,
     },
-    registeredCount: {
-      type: Number,
-      default: 0,
+
+    status: {
+      type: String,
+      enum: ["Upcoming", "Ongoing", "Done"],
+      default: "Upcoming",
+    },
+
+    skills: {
+      type: [String], // array of skills
+      required: true,
+    },
+
+    jobDescription: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

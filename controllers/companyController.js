@@ -1,6 +1,7 @@
 const Company = require("../models/Company");
+const Application = require("../models/Application");
 
-// CREATE COMPANY
+// ================= CREATE COMPANY =================
 exports.createCompany = async (req, res) => {
   try {
     const company = await Company.create(req.body);
@@ -10,6 +11,7 @@ exports.createCompany = async (req, res) => {
       company,
     });
   } catch (error) {
+    console.error("Create company error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -17,17 +19,32 @@ exports.createCompany = async (req, res) => {
   }
 };
 
-// GET ALL COMPANIES
+// ================= GET ALL COMPANIES (REAL-TIME REGISTERED COUNT) =================
 exports.getAllCompanies = async (req, res) => {
   try {
     const companies = await Company.find().sort({ createdAt: -1 });
 
+    const companiesWithCount = await Promise.all(
+      companies.map(async (company) => {
+        // IMPORTANT: match by COMPANY NAME because Application stores company as STRING
+        const registeredCount = await Application.countDocuments({
+          company: company.name,
+        });
+
+        return {
+          ...company.toObject(),
+          registeredCount,
+        };
+      })
+    );
+
     res.status(200).json({
       success: true,
-      count: companies.length,
-      companies,
+      count: companiesWithCount.length,
+      companies: companiesWithCount,
     });
   } catch (error) {
+    console.error("Get all companies error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -35,7 +52,7 @@ exports.getAllCompanies = async (req, res) => {
   }
 };
 
-// GET SINGLE COMPANY
+// ================= GET SINGLE COMPANY =================
 exports.getCompanyById = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
@@ -47,11 +64,19 @@ exports.getCompanyById = async (req, res) => {
       });
     }
 
+    const registeredCount = await Application.countDocuments({
+      company: company.name,
+    });
+
     res.status(200).json({
       success: true,
-      company,
+      company: {
+        ...company.toObject(),
+        registeredCount,
+      },
     });
   } catch (error) {
+    console.error("Get company by id error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -59,7 +84,7 @@ exports.getCompanyById = async (req, res) => {
   }
 };
 
-// UPDATE COMPANY
+// ================= UPDATE COMPANY =================
 exports.updateCompany = async (req, res) => {
   try {
     const company = await Company.findByIdAndUpdate(
@@ -80,6 +105,7 @@ exports.updateCompany = async (req, res) => {
       company,
     });
   } catch (error) {
+    console.error("Update company error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -87,7 +113,7 @@ exports.updateCompany = async (req, res) => {
   }
 };
 
-// DELETE COMPANY
+// ================= DELETE COMPANY =================
 exports.deleteCompany = async (req, res) => {
   try {
     const company = await Company.findByIdAndDelete(req.params.id);
@@ -104,6 +130,7 @@ exports.deleteCompany = async (req, res) => {
       message: "Company deleted successfully",
     });
   } catch (error) {
+    console.error("Delete company error:", error);
     res.status(500).json({
       success: false,
       error: error.message,

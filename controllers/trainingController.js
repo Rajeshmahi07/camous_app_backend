@@ -13,6 +13,7 @@ exports.createTraining = async (req, res) => {
       training,
     });
   } catch (error) {
+    console.error("Create training error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -31,6 +32,7 @@ exports.getAllTrainings = async (req, res) => {
       trainings,
     });
   } catch (error) {
+    console.error("Get trainings error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -55,6 +57,7 @@ exports.getTrainingById = async (req, res) => {
       training,
     });
   } catch (error) {
+    console.error("Get training error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -83,6 +86,7 @@ exports.updateTraining = async (req, res) => {
       training,
     });
   } catch (error) {
+    console.error("Update training error:", error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -107,6 +111,7 @@ exports.deleteTraining = async (req, res) => {
       message: "Training deleted successfully",
     });
   } catch (error) {
+    console.error("Delete training error:", error);
     res.status(500).json({
       success: false,
       error: error.message,

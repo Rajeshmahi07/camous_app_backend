@@ -20,6 +20,25 @@ const placementSchema = new mongoose.Schema(
       trim: true,
     },
 
+    role: {
+      type: String,
+      trim: true,
+      default: "Software Engineer",
+    },
+
+    location: {
+      type: String,
+      trim: true,
+      default: "Bengaluru",
+    },
+
+    photo: {
+      type: String,
+      trim: true,
+      default:
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=60",
+    },
+
     package: {
       type: Number, // in LPA
       required: true,

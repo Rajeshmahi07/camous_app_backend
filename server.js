@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database");
 const errorHandler = require("./middlewares/errorMiddleware");
 const highlightRoutes = require("./routes/highlightRoutes");
-
+const contactRoutes = require("./routes/contactRoutes");
 dotenv.config();
 
 const app = express();
@@ -17,7 +17,7 @@ const companyRoutes = require("./routes/companyRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const placementRoutes = require("./routes/placementRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
-const trainingRoutes = require("./routes/trainingRoutes");   // ✅ NEW
+const trainingRoutes = require("./routes/trainingRoutes"); // ✅ NEW
 
 // ======== MIDDLEWARES ======== //
 app.use(express.json());
@@ -28,7 +28,7 @@ app.use(
   cors({
     origin: ["http://localhost:5173", "http://localhost:8080"],
     credentials: true,
-  })
+  }),
 );
 
 // ======== ROUTES ======== //
@@ -37,8 +37,9 @@ app.use("/api/companies", companyRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/placements", placementRoutes);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/trainings", trainingRoutes);   // ✅ VERY IMPORTANT
+app.use("/api/trainings", trainingRoutes);
 app.use("/api/highlights", highlightRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // Health check
 app.get("/", (req, res) => {

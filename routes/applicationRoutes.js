@@ -2,11 +2,18 @@ const express = require("express");
 const router = express.Router();
 
 const { protect, authorize } = require("../middlewares/authMiddleware");
-const { applyJob } = require("../controllers/applicationController");
-const Application = require("../models/Application");   // ✅ IMPORTANT FIX
+const {
+  applyJob,
+  getMyApplications,
+  deleteApplication,
+} = require("../controllers/applicationController");
+const Application = require("../models/Application");
 
 // ================= STUDENT: APPLY FOR JOB =================
 router.post("/apply/:jobId", protect, applyJob);
+
+// ================= STUDENT: GET MY APPLICATIONS =================
+router.get("/my", protect, getMyApplications);
 
 // ================= ADMIN: GET ALL APPLICATIONS =================
 router.get(
@@ -31,6 +38,14 @@ router.get(
       });
     }
   }
+);
+
+// ================= ADMIN: DELETE APPLICATION =================
+router.delete(
+  "/:id",
+  protect,
+  authorize("admin"),
+  deleteApplication
 );
 
 module.exports = router;
