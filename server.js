@@ -24,12 +24,23 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ======== CORS ======== //
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "http://localhost:8080", "http://localhost:8081"],
+//     credentials: true,
+//   }),
+// );
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:8080", "http://localhost:8081"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:8080",
+      process.env.CLIENT_URL, // ⭐ ADD THIS
+    ],
     credentials: true,
-  }),
+  })
 );
+
 
 // ======== ROUTES ======== //
 app.use("/api/auth", authRoutes);

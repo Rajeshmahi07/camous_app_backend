@@ -15,14 +15,26 @@ const generateToken = (id) => {
 const sendTokenResponse = (user, statusCode, res) => {
   const token = generateToken(user._id);
 
+  // const options = {
+  //   expires: new Date(
+  //     Date.now() +
+  //       (process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+  //   ),
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === 'production',
+  // };
+
   const options = {
-    expires: new Date(
-      Date.now() +
-        (process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-  };
+  expires: new Date(
+    Date.now() +
+      (process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+  ),
+  httpOnly: true,
+
+  // ⭐ IMPORTANT FOR RENDER
+  secure: true,
+  sameSite: "none",
+};
 
   res
     .status(statusCode)
@@ -144,21 +156,39 @@ exports.getMe = async (req, res, next) => {
 
 
 // ================= LOGOUT =================
+// exports.logout = async (req, res, next) => {
+//   try {
+//     res.cookie('token', 'none', {
+//       expires: new Date(Date.now() + 10 * 1000),
+//       httpOnly: true,
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       data: {},
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 exports.logout = async (req, res, next) => {
   try {
-    res.cookie('token', 'none', {
+    res.cookie("token", "none", {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({
       success: true,
-      data: {},
     });
   } catch (err) {
     next(err);
   }
 };
+
 
 // ================= UPDATE USER DETAILS =================
 exports.updateDetails = async (req, res, next) => {
